@@ -9,18 +9,18 @@ TELEGRAM_TOKEN = os.getenv("8818117723:AAG9BF8QXBqbcW_e7wLjoYjLQEXcOvc-CfE")
 GROK_API_KEY = os.getenv("xai-6hacK8sX04kUpus6sZFkdTPy2PxdmrbI98xEnSmH9WHx0Id4rrq4x20AZfz2GqfshseV1oase9yg3YFi")
 
 if not TELEGRAM_TOKEN:
-    print("❌ TELEGRAM_TOKEN belum diatur di Railway!")
+    print("❌ TELEGRAM_TOKEN belum diatur!")
 if not GROK_API_KEY:
-    print("❌ GROK_API_KEY belum diatur di Railway!")
+    print("❌ GROK_API_KEY belum diatur!")
 
-# Inisialisasi Grok Client
+# Inisialisasi Grok
 client = AsyncOpenAI(
     api_key=GROK_API_KEY,
     base_url="https://api.x.ai/v1"
 )
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("👋 Halo! Bot Grok AI sudah aktif.\nSilakan bertanya apa saja.")
+    await update.message.reply_text("👋 Halo! Bot Grok AI sudah aktif.\nMau ngobrol apa saja?")
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_message = update.message.text
@@ -30,11 +30,38 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     try:
         response = await client.chat.completions.create(
-            model="grok-3",                    # Coba grok-3 dulu
+            model="grok-3",
             messages=[
                 {"role": "system", "content": "Kamu adalah asisten AI yang ramah, santai, dan helpful. Jawab dalam bahasa Indonesia."},
                 {"role": "user", "content": user_message}
             ],
+            temperature=0.7,
+            max_tokens=800
+        )
+        await update.message.reply_text(response.choices[0].message.content)
+
+    except Exception as e:
+        print(f"ERROR: {str(e)}")
+        await update.message.reply_text("❌ Maaf, bot sedang error. Coba lagi nanti.")
+
+async def main():
+    if not TELEGRAM_TOKEN or not GROK_API_KEY:
+        print("❌ Konfigurasi belum lengkap. Cek Environment Variables di Railway.")
+        return
+
+    app = Application.builder().token(TELEGRAM_TOKEN).build()
+
+    app.add_handler(CommandHandler("start", start))
+    
+    # Baris ini yang sering error, kita pisah
+    message_handler = MessageHandler(filters.TEXT & \~filters.COMMAND, handle_message)
+    app.add_handler(message_handler)
+
+    print("✅ Bot Grok AI berhasil dijalankan di Railway!")
+    await app.run_polling()
+
+if __name__ == "__main__":
+    asyncio.run(main())            ],
             temperature=0.7,
             max_tokens=800
         )
