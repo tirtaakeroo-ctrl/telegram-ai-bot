@@ -12,7 +12,7 @@ SYSTEM_PROMPT = "Kamu adalah asisten AI yang ramah, santai, helpful, dan jawab d
 
 client = AsyncOpenAI(
     api_key=GROQ_API_KEY,
-    base_url="https://api.groq.com/openai/v1"
+    base_url="https://api.x.ai/v1"
 )
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
