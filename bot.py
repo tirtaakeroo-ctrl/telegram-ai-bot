@@ -11,7 +11,7 @@ GROQ_API_KEY = os.getenv("xai-6hacK8sX04kUpus6sZFkdTPy2PxdmrbI98xEnSmH9WHx0Id4rr
 SYSTEM_PROMPT = "Kamu adalah asisten AI yang ramah, santai, helpful, dan jawab dalam bahasa Indonesia."
 
 client = AsyncOpenAI(
-    api_key=xai-6hacK8sX04kUpus6sZFkdTPy2PxdmrbI98xEnSmH9WHx0Id4rrq4x20AZfz2GqfshseV1oase9yg3YFi,
+    api_key=GROQ_API_KEY,
     base_url="https://api.groq.com/openai/v1"
 )
 
