@@ -5,13 +5,13 @@ from openai import AsyncOpenAI
 import os
 
 # Ambil dari Environment Variables Railway
-TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+TELEGRAM_TOKEN = os.getenv("8818117723:AAG9BF8QXBqbcW_e7wLjoYjLQEXcOvc-CfE")
+GROQ_API_KEY = os.getenv("xai-6hacK8sX04kUpus6sZFkdTPy2PxdmrbI98xEnSmH9WHx0Id4rrq4x20AZfz2GqfshseV1oase9yg3YFi")
 
 SYSTEM_PROMPT = "Kamu adalah asisten AI yang ramah, santai, helpful, dan jawab dalam bahasa Indonesia."
 
 client = AsyncOpenAI(
-    api_key=GROQ_API_KEY,
+    api_key=xai-6hacK8sX04kUpus6sZFkdTPy2PxdmrbI98xEnSmH9WHx0Id4rrq4x20AZfz2GqfshseV1oase9yg3YFi,
     base_url="https://api.groq.com/openai/v1"
 )
 
