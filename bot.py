@@ -4,19 +4,23 @@ import asyncio
 from openai import AsyncOpenAI
 import os
 
-# Ambil dari Environment Variables Railway
+# ================== KONFIGURASI ==================
 TELEGRAM_TOKEN = os.getenv("8818117723:AAG9BF8QXBqbcW_e7wLjoYjLQEXcOvc-CfE")
-GROQ_API_KEY = os.getenv("xai-6hacK8sX04kUpus6sZFkdTPy2PxdmrbI98xEnSmH9WHx0Id4rrq4x20AZfz2GqfshseV1oase9yg3YFi")
+GROK_API_KEY = os.getenv("xai-6hacK8sX04kUpus6sZFkdTPy2PxdmrbI98xEnSmH9WHx0Id4rrq4x20AZfz2GqfshseV1oase9yg3YFi")
 
-SYSTEM_PROMPT = "Kamu adalah asisten AI yang ramah, santai, helpful, dan jawab dalam bahasa Indonesia."
+if not TELEGRAM_TOKEN:
+    print("❌ TELEGRAM_TOKEN belum diatur di Railway!")
+if not GROK_API_KEY:
+    print("❌ GROK_API_KEY belum diatur di Railway!")
 
+# Inisialisasi Grok Client
 client = AsyncOpenAI(
-    api_key=GROQ_API_KEY,
+    api_key=GROK_API_KEY,
     base_url="https://api.x.ai/v1"
 )
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("👋 Halo! Saya AI Chatbot. Mau ngobrol apa hari ini?")
+    await update.message.reply_text("👋 Halo! Bot Grok AI sudah aktif.\nSilakan bertanya apa saja.")
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_message = update.message.text
@@ -26,25 +30,32 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     try:
         response = await client.chat.completions.create(
-            model="llama3-70b-8192",
+            model="grok-3",                    # Coba grok-3 dulu
             messages=[
-                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "system", "content": "Kamu adalah asisten AI yang ramah, santai, dan helpful. Jawab dalam bahasa Indonesia."},
                 {"role": "user", "content": user_message}
             ],
             temperature=0.7,
-            max_tokens=1000
+            max_tokens=800
         )
         ai_reply = response.choices[0].message.content
         await update.message.reply_text(ai_reply)
-    except:
-        await update.message.reply_text("❌ Maaf, sedang sibuk. Coba lagi nanti ya.")
+
+    except Exception as e:
+        print(f"ERROR: {str(e)}")   # Ini akan muncul di Railway Logs
+        await update.message.reply_text("❌ Maaf, bot sedang mengalami masalah. Coba lagi nanti.")
 
 async def main():
+    if not TELEGRAM_TOKEN or not GROK_API_KEY:
+        print("❌ Konfigurasi belum lengkap!")
+        return
+        
     app = Application.builder().token(TELEGRAM_TOKEN).build()
+
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.TEXT & \~filters.COMMAND, handle_message))
 
-    print("🤖 Bot sedang berjalan di Railway...")
+    print("✅ Bot Grok AI berhasil dijalankan di Railway!")
     await app.run_polling()
 
 if __name__ == "__main__":
